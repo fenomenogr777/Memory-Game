@@ -4,8 +4,7 @@ const playBtn = document.querySelector('#btn');
 const gridContainerEL = document.querySelector('#grid');
 const score = document.querySelector('#score');
 const scoreboard = document.querySelector('.scoreboard');
-const resetBtn=document.querySelector("#reset-game")
-
+const resetBtn = document.querySelector('#reset-game');
 
 const gameItems = [
   { name: 'cheeseburger', img: 'images/cheeseburger.png' },
@@ -23,10 +22,10 @@ const gameItems = [
 ];
 
 class MemoryGame {
-  score = 2;
   chosenImages = [];
 
-  constructor(gameItems) {
+  constructor(gameItems, score) {
+    this.score = score;
     // GAME ITEMS DATA
     this.gameItems = gameItems;
     //PLAY BUTTON EVENT
@@ -34,21 +33,22 @@ class MemoryGame {
     //CLICK IMAGE EVENT
     gridContainerEL.addEventListener('click', this.clickImagesEvent.bind(this));
 
-    resetBtn.addEventListener("click" ,this.resetGameEvent.bind(this))
+    // RESET EVENT
+    resetBtn.addEventListener('click', this.resetGameEvent.bind(this));
   }
   // PLAY BUTTON EVENT HANDLER
-resetGameEvent(){
-  this.resetGame()
-  this.randomizeImages();
-  this.createImages();
-  this.showScore()
-  this.hideImages(1);
-}
+  resetGameEvent() {
+    this.resetGame();
+    this.randomizeImages();
+    this.createImages();
+    this.showScore();
+    this.hideImages(1);
+  }
 
   startGameEvent(e) {
     this.randomizeImages();
     this.createImages();
-    this.showScore()
+    this.showScore();
     this.hideImages(1);
   }
   // CREATE IMAGES FROM ARRAY
@@ -72,19 +72,19 @@ resetGameEvent(){
 
   hideImages(sec) {
     const [...images] = document.querySelectorAll('.nomatch');
-    console.log(images[0]);
     setTimeout(function () {
       const imagesss = images.filter(img => img.classList.contains('nomatch'));
       imagesss.forEach(img => img.setAttribute('src', 'images/blank.png'));
       playBtn.disabled = false;
     }, sec * 1000);
   }
-  showScore(){
-    scoreboard.classList.remove("hidden")
-    score.innerHTML=this.score
+  showScore() {
+    scoreboard.classList.remove('hidden');
+    score.innerHTML = this.score;
   }
   // CLICK IMAGES EVENT HANDLER
   clickImagesEvent(e) {
+   
     // RETURN WHATEVER IS NOT A IMAGE
     if (!e.target.closest('#grid img')) return;
 
@@ -96,15 +96,17 @@ resetGameEvent(){
     const id = e.target.getAttribute('id');
     const src = e.target.getAttribute('src');
     this.chosenImages.push({ id, src });
-    console.log(this.chosenImages);
     // GUARD MEXRI TO CHOSEN ARRAY HAS 2 DATA
     if (this.chosenImages.length !== 2) return;
+
+    if (this.chosenImages.length === 2) {
+      setTimeout(() => {}, 5000);
+    }
     // IF MATCH - IMAGES STAY VISIBLE
     if (
       this.chosenImages[0].src === this.chosenImages[1].src &&
       this.chosenImages[0].id !== this.chosenImages[1].id
     ) {
-      console.log(this.chosenImages[0].id);
       const image1 = document.getElementById(`${this.chosenImages[0].id}`);
       const image2 = document.getElementById(`${this.chosenImages[1].id}`);
       image1.setAttribute('class', 'match');
@@ -113,10 +115,9 @@ resetGameEvent(){
 
     // IF NO MATCH - IMAGES HIDE
     if (this.chosenImages[0].src !== this.chosenImages[1].src) {
-      console.log(this.chosenImages);
       this.hideImages(0.8);
-      this.score--
-      this.showScore()
+      this.score--;
+      this.showScore();
       // this.chosenImages = [];
     }
     // IF ID'S ARE THE SAME,CLICKED SAME IMG 2 TIMES
@@ -126,29 +127,34 @@ resetGameEvent(){
 
     // RESET CHOSEN ARRAY
     this.chosenImages = [];
-    if(this.score===0) {
-      this.loseGame()
+    if (this.score === 0) {
+      this.loseGame();
     }
   }
 
-  loseGame(){
-    document.body.style.background="red"
-    scoreboard.style.display="none"
-    gridContainerEL.style.display="none"
-    playBtn.innerText=`YOU LOST!!!`
-    playBtn.disabled=true
-    resetBtn.style.display="block"
-    gridContainerEL.removeEventListener("click",this.clickImagesEvent.bind(this) )
+  loseGame() {
+    document.body.style.background = 'red';
+    scoreboard.style.display = 'none';
+    gridContainerEL.style.display = 'none';
+    playBtn.innerText = `YOU LOST!!!`;
+    playBtn.disabled = true;
+    resetBtn.style.display = 'block';
+    gridContainerEL.removeEventListener(
+      'click',
+      this.clickImagesEvent.bind(this)
+    );
   }
 
-  resetGame(){
-    scoreboard.style.display="grid"
-    this.score=2
-    resetBtn.style.display="none"
-    playBtn.innerText=`shuffle`
-    document.body.style.background="#ff440080"
-    gridContainerEL.style.display="grid"
+  resetGame() {
+    scoreboard.style.display = 'grid';
+    this.score = 8;
+    resetBtn.style.display = 'none';
+    playBtn.innerText = `shuffle`;
+    document.body.style.background = '#ff440080';
+    gridContainerEL.style.display = 'grid';
   }
+
+ 
 }
 
-const app = new MemoryGame(gameItems);
+const app = new MemoryGame(gameItems, 8);
