@@ -84,29 +84,27 @@ class MemoryGame {
   }
   // CLICK IMAGES EVENT HANDLER
   clickImagesEvent(e) {
-   
     // RETURN WHATEVER IS NOT A IMAGE
     if (!e.target.closest('#grid img')) return;
 
     // TAKES CLICK ID AND PUT THE ITEM FROM GAMEITEMS
-    const clickedId = e.target.getAttribute('id');
+    const id = e.target.getAttribute('id');
 
     // WHEN IMAGE IS CLICKED SET THE SRC TO IMAGE SO IT APPEARS
-    e.target.setAttribute('src', this.gameItems[clickedId].img);
-    const id = e.target.getAttribute('id');
+    e.target.setAttribute('src', this.gameItems[id].img);
+
     const src = e.target.getAttribute('src');
+
     this.chosenImages.push({ id, src });
     // GUARD MEXRI TO CHOSEN ARRAY HAS 2 DATA
     if (this.chosenImages.length !== 2) return;
-
-    if (this.chosenImages.length === 2) {
-      setTimeout(() => {}, 5000);
-    }
+    console.log(this.chosenImages);
     // IF MATCH - IMAGES STAY VISIBLE
     if (
       this.chosenImages[0].src === this.chosenImages[1].src &&
       this.chosenImages[0].id !== this.chosenImages[1].id
     ) {
+      console.log(`pame`);
       const image1 = document.getElementById(`${this.chosenImages[0].id}`);
       const image2 = document.getElementById(`${this.chosenImages[1].id}`);
       image1.setAttribute('class', 'match');
@@ -115,6 +113,7 @@ class MemoryGame {
 
     // IF NO MATCH - IMAGES HIDE
     if (this.chosenImages[0].src !== this.chosenImages[1].src) {
+      console.log(`pame`);
       this.hideImages(0.8);
       this.score--;
       this.showScore();
@@ -124,7 +123,7 @@ class MemoryGame {
     if (this.chosenImages[0].id === this.chosenImages[1].id) {
       this.hideImages(0.8);
     }
-
+    console.log(`pame`);
     // RESET CHOSEN ARRAY
     this.chosenImages = [];
     if (this.score === 0) {
@@ -153,8 +152,6 @@ class MemoryGame {
     document.body.style.background = '#ff440080';
     gridContainerEL.style.display = 'grid';
   }
-
- 
 }
 
 const app = new MemoryGame(gameItems, 8);
